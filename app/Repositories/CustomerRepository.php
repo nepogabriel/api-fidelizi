@@ -7,6 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CustomerRepository
 {
+    public function getAllCustomers()
+    {
+        return Customer::paginate(30);
+    }
+
     public function registerCustomer($customer): Customer
     {
         $customer = Customer::create($customer);

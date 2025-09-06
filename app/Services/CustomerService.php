@@ -12,6 +12,31 @@ class CustomerService
         private CustomerRepository $customerRepository
     ) {}
 
+    public function getAllCustomers(): array
+    {
+        try {
+            $customers = $this->customerRepository->getAllCustomers();
+
+            return [
+                'return' => $customers,
+                'code' => Response::HTTP_OK
+            ];
+        } catch (\Exception $exception) {
+            Log::error('Erro ao buscar todos os clientes: ', [
+                'message' => $exception->getMessage(),
+                'code-http' => $exception->getCode(),
+                'trace' =>$exception->getTrace(),
+            ]);
+
+            return [
+                'return' => [
+                    'error' => 'Não foi possível buscar todos os clientes!',
+                ],
+                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            ];
+        }
+    }
+
     public function registerCustomer(array $customer): array
     {
         try {

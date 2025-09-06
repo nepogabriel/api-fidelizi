@@ -13,6 +13,13 @@ class CustomerController extends Controller
         private CustomerService $customerService
     ) {}
 
+    public function index(): JsonResponse
+    {
+        $data = $this->customerService->getAllCustomers();
+
+        return ApiResponse::response($data['return'], $data['code']);
+    }
+
     public function store(StoreCustomerRequest $request): JsonResponse
     {
         $data = $this->customerService->registerCustomer($request->validated());
