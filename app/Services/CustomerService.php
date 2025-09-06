@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Services;
+
+use App\Repositories\CustomerRepository;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
+
+class CustomerService
+{
+    public function __construct(
+        private CustomerRepository $customerRepository
+    ) {}
+
+    public function registerCustomer(array $customer): array
+    {
+        try {
+            $responseCustomer = $this->customerRepository->registerCustomer($customer);
+
+            Log::info('Cliente criado com sucesso.', [
+                'name' => $responseCustomer->name,
+                'email' => $responseCustomer->email,
+                'hour' => now(),
+            ]);
+
+            return [
+                'return' => [
+                    'message' => 'Cliente cadastrado com sucesso!',
+                    'data' => $responseCustomer,
+                ],
+                'code' => Response::HTTP_CREATED
+            ];
+        } catch (\Exception $exception) {
+            Log::error('Erro ao cadastrar cliente: ', [
+                'message' => $exception->getMessage(),
+                'code-http' => $exception->getCode(),
+                'trace' =>$exception->getTrace(),
+            ]);
+
+            return [
+                'return' => [
+                    'error' => 'Não foi possível cadastrar o cliente!',
+                ],
+                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            ];
+        }
+    }
+}
