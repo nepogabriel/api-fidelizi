@@ -33,4 +33,11 @@ class CustomerController extends Controller
 
         return ApiResponse::response($data['return'], $data['code']);
     }
+
+    public function showPointsAndRedemptions(int $id): JsonResponse
+    {
+        $data = $this->customerService->showPointsAndRedemptions($id);
+
+        return ApiResponse::response($data['return'], $data['code']);
+    }
 }

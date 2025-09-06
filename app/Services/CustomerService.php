@@ -98,4 +98,44 @@ class CustomerService
             ];
         }
     }
+
+    public function showPointsAndRedemptions(int $id): array
+    {
+        try {
+            $customer = $this->customerRepository->showPointsAndRedemptions($id);
+
+            $data = [
+                'customer_id' => $customer->id,
+                'name' => $customer->name,
+                'email' => $customer->email,
+                'points' => $customer->points,
+                'redeemed_prizes' => $customer->redemptions->map(function ($redemption) {
+                    return [
+                        'prize_id' => $redemption->prize->id,
+                        'prize_name' => $redemption->prize->name,
+                        'points_spent' => $redemption->prize->points,
+                        'redeemed_at' => $redemption->created_at->format('Y-m-d H:i:s'),
+                    ];
+                }),
+            ];
+
+            return [
+                'return' => $data,
+                'code' => Response::HTTP_OK
+            ];
+        } catch (\Exception $exception) {
+            Log::error('Erro ao buscar pontos e resgates de prêmios do cliente: ', [
+                'message' => $exception->getMessage(),
+                'code-http' => $exception->getCode(),
+                'trace' =>$exception->getTrace(),
+            ]);
+
+            return [
+                'return' => [
+                    'error' => 'Não foi possível buscar pontos e resgates de prêmios do cliente!',
+                ],
+                'code' => Response::HTTP_NOT_FOUND,
+            ];
+        }
+    }
 }

@@ -49,4 +49,9 @@ class CustomerRepository
             ->where('id', '=', $id)
             ->first(); 
     }
+
+    public function showPointsAndRedemptions(int $id)
+    {
+        return Customer::with(['redemptions.prize'])->findOrFail($id);
+    }
 }
