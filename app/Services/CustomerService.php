@@ -45,4 +45,32 @@ class CustomerService
             ];
         }
     }
+
+    public function findCustomerById(int $id): array
+    {
+        try {
+            $customer = $this->customerRepository->findCustomerById($id);
+
+            return [
+                'return' => [
+                    'message' => 'Cliente encontrado com sucesso!',
+                    'data' => $customer,
+                ],
+                'code' => Response::HTTP_OK
+            ];
+        } catch (\Exception $exception) {
+            Log::error('Erro ao buscar cliente por ID: ', [
+                'message' => $exception->getMessage(),
+                'code-http' => $exception->getCode(),
+                'trace' =>$exception->getTrace(),
+            ]);
+
+            return [
+                'return' => [
+                    'error' => 'Não foi possível encontrar o cliente!',
+                ],
+                'code' => Response::HTTP_NOT_FOUND,
+            ];
+        }
+    }
 }
