@@ -12,19 +12,19 @@ class PrizeSeeder extends Seeder
     {
         $prizes = [
             [
-                'name' => 'Orange Juice',
+                'name' => 'Suco de Laranja',
                 'points' => 5,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => '10% Discount',
+                'name' => '10% de desconto',
                 'points' => 10,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'Special Lunch',
+                'name' => 'Almoço especial',
                 'points' => 20,
                 'created_at' => now(),
                 'updated_at' => now()
