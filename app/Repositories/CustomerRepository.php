@@ -12,9 +12,9 @@ class CustomerRepository
         return Customer::paginate(30);
     }
 
-    public function registerCustomer($customer): Customer
+    public function registerCustomer(array $data): Customer
     {
-        $customer = Customer::create($customer);
+        $customer = Customer::create($data);
 
         if (!$customer)
             throw new \Exception('Ops! Algo de errado ocorreu ao registar o cliente.');
@@ -30,5 +30,10 @@ class CustomerRepository
             throw new \Exception('Cliente não encontrado.', Response::HTTP_NOT_FOUND);
 
         return $customer;
+    }
+
+    public function updateCustomerPoints(Customer $customer, float $points)
+    {
+        return $customer->increment('points',$points);
     }
 }
