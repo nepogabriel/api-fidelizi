@@ -32,8 +32,21 @@ class CustomerRepository
         return $customer;
     }
 
-    public function updateCustomerPoints(Customer $customer, float $points)
+    public function incrementCustomerPoints(int $id, int $points): int
     {
-        return $customer->increment('points',$points);
+        return Customer::where('id', $id)->increment('points', $points);
+    }
+
+    public function decrementCustomerPoints(int $id, int $points): int
+    {
+        return Customer::where('id', $id)->decrement('points', $points);
+    }
+
+    public function getPointsCustomerById(int $id): Customer|null
+    {
+        return Customer::query()
+            ->select('points')
+            ->where('id', '=', $id)
+            ->first(); 
     }
 }

@@ -17,15 +17,14 @@ class OrderService
     public function registerOrder(array $data)
     {
         try {
-            $customer = $this->customerRepository->findCustomerById($data['customer_id']);
-
             $points = floor($data['amount'] / 5);
 
             $data['earned_points'] = $points;
 
             $order = $this->orderRepository->registerOrder($data);
 
-            $this->customerRepository->updateCustomerPoints($customer, $points);
+            $this->customerRepository->incrementCustomerPoints($data['customer_id'], $points);
+            
 
             Log::info('Pedido cadastrado com sucesso.', [
                 'customer_id' => $order->customer_id,
