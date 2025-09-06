@@ -19,17 +19,18 @@ class OrderService
         try {
             $points = floor($data['amount'] / 5);
 
-            $data['earned_points'] = $points;
+            $data['points_earned'] = $points;
 
             $order = $this->orderRepository->registerOrder($data);
-
-            $this->customerRepository->incrementCustomerPoints($data['customer_id'], $points);
             
+            if ($points > 0) {
+                $this->customerRepository->incrementCustomerPoints($data['customer_id'], $points);
+            }
 
             Log::info('Pedido cadastrado com sucesso.', [
                 'customer_id' => $order->customer_id,
                 'amount' => $order->amount,
-                'earned_points' => $order->earned_points,
+                'points_earned' => $order->points_earned,
                 'hour' => now(),
             ]);
 

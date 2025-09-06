@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->decimal('amount', 10, 2);
-            $table->integer('earned_points');
+            $table->integer('points_earned');
             $table->timestamps();
         });
     }

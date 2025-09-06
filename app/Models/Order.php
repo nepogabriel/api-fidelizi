@@ -13,7 +13,7 @@ class Order extends Model
     protected $fillable = [
         'customer_id',
         'amount',
-        'earned_points'
+        'points_earned'
     ];
 
     public function customer(): BelongsTo
