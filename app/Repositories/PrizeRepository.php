@@ -18,6 +18,18 @@ class PrizeRepository
         return $prize;
     }
 
+    public function findMaximumPrize()
+    {
+        $maximumPrize = Prize::max('points');
+
+        $prize = Prize::where('points', $maximumPrize)->first();
+
+        if (!$prize)
+            throw new \Exception('Prêmio não encontrado.', Response::HTTP_NOT_FOUND);
+
+        return $prize;
+    }
+
     public function getPointsPrizeById(int $id): Prize|null
     {
         return Prize::query()

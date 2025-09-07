@@ -14,7 +14,8 @@ class MaximumPrizeMail extends Mailable
     use Queueable, SerializesModels;
 
     public function __construct(
-        public $customer
+        public $customer,
+        public $prize
     ) {}
 
     public function envelope(): Envelope
