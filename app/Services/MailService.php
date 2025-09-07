@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Mail\PointsEarnedMail;
+use App\Mail\PrizeRedeemedMail;
 use App\Repositories\CustomerRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -36,8 +37,8 @@ class MailService
                 ->send(new PointsEarnedMail($customer, $points, $orderAmount));
 
             Log::info('E-mail de pontos ganhos enviado com sucesso.', [
-                'customer_id' => $customer->id,
                 'email' => $customer->email,
+                'customer' => $customer,
                 'points' => $points,
                 'amount' => $orderAmount,
                 'sent_at' => now(),
@@ -45,6 +46,28 @@ class MailService
         } catch (\Throwable $exception) {
             Log::critical('Erro inesperado ao tentar enviar e-mail de pontos ganhos.', [
                 'customer_id' => $customerId,
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+        }
+    }
+
+    public function sendRedmeedPrize($customer, $prize)
+    {
+        try {
+            Mail::to($customer->email)
+                ->send(new PrizeRedeemedMail($customer, $prize));
+
+            Log::info('E-mail do resgate de prêmio enviado com sucesso.', [
+                'email' => $customer->email,
+                'customer' => $customer,
+                'prize' => $prize,
+                'sent_at' => now(),
+            ]);
+        } catch (\Throwable $exception) {
+            Log::critical('Erro inesperado ao tentar enviar e-mail do resgate de prêmio.', [
+                'customer' => $customer,
+                'prize' => $prize,
                 'message' => $exception->getMessage(),
                 'trace' => $exception->getTraceAsString(),
             ]);

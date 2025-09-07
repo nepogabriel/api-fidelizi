@@ -15,15 +15,18 @@ class SendPointsEarnedEmail implements ShouldQueue
 {
     use Queueable;
 
+    private MailService $mailService;
+
     public function __construct(
         public int $customerId,
         public int $points,
         public $orderAmount
-    ) {}
+    ) {
+         $this->mailService = new MailService();
+    }
 
     public function handle(): void
     {
-        $mailService = new MailService();
-        $mailService->sendPointsEarned($this->customerId, $this->points, $this->orderAmount);
+        $this->mailService->sendPointsEarned($this->customerId, $this->points, $this->orderAmount);
     }
 }

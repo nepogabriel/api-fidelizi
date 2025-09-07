@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\SendPrizeRedmeedEmail;
 use App\Repositories\CustomerRepository;
 use App\Repositories\PrizeRepository;
 use App\Repositories\RedemptionRepository;
@@ -19,8 +20,8 @@ class RedemptionService
     public function prizeRedemption(array $data)
     {
         try {
-            $customer = $this->customerRepository->getPointsCustomerById($data['customer_id']);
-            $prize = $this->prizeRepository->getPointsPrizeById($data['prize_id']);
+            $customer = $this->customerRepository->findCustomerById($data['customer_id']);
+            $prize = $this->prizeRepository->findPrizeById($data['prize_id']);
 
             if ((isset($customer['points']) && $customer['points'] <= 0)
                 || (isset($prize['points']) && $customer['points'] < $prize['points'])
@@ -37,20 +38,22 @@ class RedemptionService
 
             if (!isset($redemption)) {
                 return [
-                'return' => [
-                    'message' => 'Ops! Algo inesperado aconteceu ao resgatar o prêmio',
-                ],
-                'code' => Response::HTTP_CREATED
-            ];
+                    'return' => [
+                        'message' => 'Ops! Algo inesperado aconteceu ao resgatar o prêmio',
+                    ],
+                    'code' => Response::HTTP_OK
+                ];
             }
 
-            $customer = $this->customerRepository->decrementCustomerPoints($data['customer_id'], $prize['points']);
+            $this->customerRepository->decrementCustomerPoints($data['customer_id'], $prize['points']);
 
             Log::info('Prêmio resgatado com sucesso.', [
                 'customer_id' => $redemption->customer_id,
                 'prize_id' => $redemption->prize_id,
                 'hour' => now(),
             ]);
+
+            SendPrizeRedmeedEmail::dispatch($customer, $prize);
 
             return [
                 'return' => [
