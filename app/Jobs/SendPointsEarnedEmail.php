@@ -22,7 +22,7 @@ class SendPointsEarnedEmail implements ShouldQueue
         public int $points,
         public $orderAmount
     ) {
-         $this->mailService = new MailService();
+        $this->mailService = new MailService();
     }
 
     public function handle(): void

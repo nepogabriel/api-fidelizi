@@ -3,11 +3,17 @@
 namespace App\Repositories;
 
 use App\Models\Customer;
+use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 class CustomerRepository
 {
-    public function getAllCustomers()
+    public function getAllCustomers(): Collection
+    {
+        return Customer::all();
+    }
+
+    public function getAllCustomersWithPaginate()
     {
         return Customer::paginate(30);
     }

@@ -15,7 +15,7 @@ class CustomerService
     public function getAllCustomers(): array
     {
         try {
-            $customers = $this->customerRepository->getAllCustomers();
+            $customers = $this->customerRepository->getAllCustomersWithPaginate();
 
             return [
                 'return' => $customers,

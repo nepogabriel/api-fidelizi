@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Jobs\SendMaximumPrizeEmail;
+use App\Mail\MaximumPrizeMail;
 use App\Mail\PointsEarnedMail;
 use App\Mail\PrizeRedeemedMail;
 use App\Repositories\CustomerRepository;
@@ -52,7 +54,7 @@ class MailService
         }
     }
 
-    public function sendRedmeedPrize($customer, $prize)
+    public function sendRedmeedPrize($customer, $prize): void
     {
         try {
             Mail::to($customer->email)
@@ -68,6 +70,53 @@ class MailService
             Log::critical('Erro inesperado ao tentar enviar e-mail do resgate de prêmio.', [
                 'customer' => $customer,
                 'prize' => $prize,
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+        }
+    }
+
+    public function sendMaximumPrizeToCustomers($customer): void
+    {
+        try {
+            Mail::to($customer->email)
+                ->send(new MaximumPrizeMail($customer));
+
+            Log::info('E-mail do resgate de prêmio enviado com sucesso.', [
+                'email' => $customer->email,
+                'customer_id' => $customer->id,
+                'sent_at' => now(),
+            ]);
+        } catch (\Throwable $exception) {
+            Log::critical('Erro inesperado ao tentar enviar e-mail do resgate de prêmio.', [
+                'customer_id' => $customer->id,
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+        }
+    }
+
+    public function prepareMaximumPrizeEmails(): void
+    {
+        try {
+            $customers = $this->customerRepository->getAllCustomers();
+            
+            foreach ($customers as $customer) {
+                if ($customer->email) {                
+                    if ($customer->points >= 20) {
+                        SendMaximumPrizeEmail::dispatch($customer);
+                    
+                        Log::info('E-mail do resgate de prêmio adicionado na lista.', [
+                            'email' => $customer->email,
+                            'customer_id' => $customer->id,
+                            'sent_at' => now(),
+                        ]);
+                    }
+                }
+            }
+        } catch (\Throwable $exception) {
+            Log::critical('Erro inesperado ao tentar adicionar na fila o e-mail do resgate de prêmio.', [
+                'customer_id' => $customer->id,
                 'message' => $exception->getMessage(),
                 'trace' => $exception->getTraceAsString(),
             ]);
