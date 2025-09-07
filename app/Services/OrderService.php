@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\SendPointsEarnedEmail;
 use App\Repositories\CustomerRepository;
 use App\Repositories\OrderRepository;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +26,8 @@ class OrderService
             
             if ($points > 0) {
                 $this->customerRepository->incrementCustomerPoints($data['customer_id'], $points);
+
+                SendPointsEarnedEmail::dispatch($data['customer_id'], $points, $data['amount']);
             }
 
             Log::info('Pedido cadastrado com sucesso.', [

@@ -24,7 +24,7 @@ class CustomerRepository
 
     public function findCustomerById(int $id): Customer
     {
-        $customer = Customer::find($id);
+        $customer = Customer::findOrFail($id);
 
         if (!$customer)
             throw new \Exception('Cliente não encontrado.', Response::HTTP_NOT_FOUND);
