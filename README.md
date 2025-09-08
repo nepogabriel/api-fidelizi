@@ -1,9 +1,13 @@
 <h1 align="center">
-Projeto TO-DO List (Smart Leader)
+Fidelizi
 </h1>
 
+<h2 align="center">
+Projeto programa de fidelização
+</h2>
+
 ## Sobre
-Aplicação completa para gerenciamento de tarefas (to-do list)
+Gerenciamento de pontos por meio de compras e resgates de prêmios na plataforma com recebimento de notificações por e-mail de acordo com as ações dos clientes.
 
 ## Tecnologias utilizadas
 - Laravel
