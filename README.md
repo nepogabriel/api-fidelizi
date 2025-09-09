@@ -128,6 +128,9 @@ php artisan test
 # Documentação (Endpoints)
 - http://localhost:8181/docs/api
 
+# Postman
+Utilize o Fidelizi.postman_collection.json do repositório para testar os endpoints da API no Postman.
+
 ## 👥 Contribuidor
 Gabriel Ribeiro.
 🌐 https://linkedin.com/in/gabriel-ribeiro-br/
